@@ -56,4 +56,5 @@ class PaperExtractorAgent:
 if __name__ == "__main__":
     extractor_agent = PaperExtractorAgent()
     result = extractor_agent.extract("papers/Advancements_and_Challenges_in_Solid-State_Battery.pdf")
-    print(json.dumps(result.model_dump(), indent=2))
+    with open("paper_extraction_knowledge.json", "w", encoding="utf-8") as f:
+        json.dump(result.model_dump(), f, indent=2, ensure_ascii=False)
