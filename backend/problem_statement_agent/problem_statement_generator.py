@@ -31,7 +31,7 @@ class ProblemStatementGenerator:
 
         1. Identify the core capabilities enabled by the research.
         2. Identify industries impacted by those capabilities.
-        3. Generate between 5 and 10 high-quality problem statements.
+        3. Generate 3 high-quality problem statements.
 
         IMPORTANT:
         A problem statement must describe a painful, expensive, inefficient, unsafe, or unsolved real-world problem.
@@ -78,9 +78,3 @@ class ProblemStatementGenerator:
         )
 
         return result
-    
-if __name__ == "__main__":
-    generator = ProblemStatementGenerator()
-    result = generator.generate_problem_statements("paper_extraction_knowledge.json")
-    with open("problem_statements.json", "w", encoding="utf-8") as f:
-        json.dump(result.model_dump(), f, indent=2, ensure_ascii=False)

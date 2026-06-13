@@ -4,15 +4,11 @@ from typing import Optional, Literal
 import json
 import os
 from dotenv import load_dotenv
-# =====================================================================
-# 🔑 API KEY CONFIGURATION
-# =====================================================================
+
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 
-# =====================================================================
-# 📊 THE VENTURE SCORECARD SCHEMAS (Matches your flowchart logic)
-# =====================================================================
+
 class ScorecardMetrics(BaseModel):
     market_readiness: int = Field(description="Score from 0 to 100 on immediate sector demand.")
     competitive_advantage: int = Field(description="Score from 0 to 100 on IP defensibility vs market incumbents.")
@@ -28,13 +24,12 @@ class ConsultantDecisionSchema(BaseModel):
         description="If decision is NO but the tech has promise, give actionable alternative sectors or delivery tracks. If the market is entirely unviable, return a strict empty string ('')."
     )
 
-# =====================================================================
-# 💼 CORE CORE EVALUATION ENGINE
-# =====================================================================
+
 def run_consultant_agent(market_research_payload: dict, original_problem: str, industry_context: str):
     """
     Accepts raw market research JSON from ANY source and evaluates its startup potential.
     """
+    
     print("💼 Consulting Agent is running venture due diligence on provided dataset...")
     
     system_prompt = f"""
