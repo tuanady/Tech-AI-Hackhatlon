@@ -1,28 +1,59 @@
 import os
-from typing import List, Optional
-from pydantic import BaseModel, Field
-from langchain_openai import ChatOpenAI
-from langchain_community.document_loaders import PyPDFLoader
+import json
+from dotenv import load_dotenv
+from pypdf import PdfReader
+from google import genai
+from google.genai import types
+from schemas import ResearchPaperSchema
+load_dotenv()
+class PaperExtractorAgent:
+    def __init__(self):
+        self.client = genai.Client(
+            api_key=os.getenv("GOOGLE_API_KEY")
+        )
 
-class ResearchPaperSchema(BaseModel):
-    title: str = Field(description="The full title of the research paper")
-    abstract: str = Field(description="The executive summary or abstract")
-    methodology: str = Field(description="Brief description of the research methods used")
-    key_findings: List[str] = Field(description="A list of the main results or conclusions")
-    sample_size: Optional[int] = Field(description="Number of participants or samples, if mentioned")
+    def load_pdf(self, pdf_path: str):
+        reader = PdfReader(pdf_path)
+        text = []
+        for page in reader.pages:
+            text.append(page.extract_text())
+        return "\n\n".join(text)
 
-os.environ["OPENAI_API_KEY"] = "your-api-key"
-llm = ChatOpenAI(model="gpt-4o")
-structured_llm = llm.with_structured_output(ResearchPaperSchema)
+    def extract(self, pdf_path: str):
+        paper_text = self.load_pdf(pdf_path)
+        prompt = f"""
+        You are an expert technology transfer analyst.
+        Analyze the research paper and extract structured information.
+        Focus on:
+        - problem being solved
+        - novelty of the solution
+        - measurable improvements
+        - limitations
+        - future work
+        - industries that could benefit
+        - commercialization potential
 
-# 3. Load the PDF (extracting text from first 3 pages usually covers metadata)
-loader = PyPDFLoader("paper.pdf")
-pages = loader.load()
-content = "\n".join([p.page_content for p in pages[:5]]) # Use first 5 pages
+        Only use information present in the paper.
+        Research Paper:
+        {paper_text}
+        """
 
-# 4. Run the extraction
-result = structured_llm.invoke(f"Extract information from this research paper text:\n\n{content}")
+        response = self.client.models.generate_content(
+            model="gemini-2.5-pro",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json",
+                response_schema=ResearchPaperSchema,
+                temperature=0
+            )
+        )
 
-# Output results
-print(f"Title: {result.title}")
-print(f"Findings: {result.key_findings}")
+        result = ResearchPaperSchema.model_validate_json(
+            response.text
+        )
+        return result
+
+if __name__ == "__main__":
+    extractor_agent = PaperExtractorAgent()
+    result = extractor_agent.extract("papers/Advancements_and_Challenges_in_Solid-State_Battery.pdf")
+    print(json.dumps(result.model_dump(), indent=2))
