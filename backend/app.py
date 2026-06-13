@@ -33,6 +33,10 @@ def analyze_paper():
         if "research_paper" not in request.files:
             return jsonify({"error":"No paper uploaded"}), 400
         paper = request.files["research_paper"]
+        domain = request.form.get("domain", "").strip()
+        if not domain:
+            return jsonify({"error":"No domain provided"}), 400
+        print(domain)
         if paper.filename == "":
             return jsonify({"error":"Empty filename"}), 400
         
