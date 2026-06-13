@@ -4,8 +4,10 @@ from dotenv import load_dotenv
 from pypdf import PdfReader
 from google import genai
 from google.genai import types
-from schemas import ResearchPaperSchema
+from .schemas import ResearchPaperSchema
+
 load_dotenv()
+
 class PaperExtractorAgent:
     def __init__(self):
         self.client = genai.Client(
@@ -53,8 +55,8 @@ class PaperExtractorAgent:
         )
         return result
 
-if __name__ == "__main__":
-    extractor_agent = PaperExtractorAgent()
-    result = extractor_agent.extract("papers/Advancements_and_Challenges_in_Solid-State_Battery.pdf")
-    with open("paper_extraction_knowledge.json", "w", encoding="utf-8") as f:
-        json.dump(result.model_dump(), f, indent=2, ensure_ascii=False)
+# if __name__ == "__main__":
+#     extractor_agent = PaperExtractorAgent()
+#     result = extractor_agent.extract("papers/Advancements_and_Challenges_in_Solid-State_Battery.pdf")
+#     with open("paper_extraction_knowledge.json", "w", encoding="utf-8") as f:
+#         json.dump(result.model_dump(), f, indent=2, ensure_ascii=False)

@@ -3,7 +3,7 @@ import json
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
-from schemas import ProblemDiscoverySchema
+from .schemas import ProblemDiscoverySchema
 load_dotenv()
 
 
