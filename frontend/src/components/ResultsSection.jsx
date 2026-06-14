@@ -137,31 +137,21 @@ END OF TELEMETRY DATA SHEET // STARTARCH COMMERCIALIZATION ENGINE
   }
 
   const handleGeneratePitchDeck = async () => {
-  try {
-    const response = await fetch(
-      "http://localhost:5000/generate-pitchdeck"
-    );
+    try {
+      const response = await fetch("http://localhost:5000/generate-pitchdeck");
 
-    if (!response.ok) {
-      throw new Error("Failed to generate pitch deck");
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "AI_Pitch_Deck.pptx";
+      a.click();
+
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
     }
-
-    const blob = await response.blob();
-
-    const url = window.URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "AI_Pitch_Deck.pptx";
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error("Pitch deck generation failed:", error);
-  }
   };
 
   if (problemsList.length === 0) {
