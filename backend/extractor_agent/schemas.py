@@ -35,3 +35,6 @@ class ResearchPaperSchema(BaseModel):
     research_stage: str = Field(
         description="Current maturity of the research based on evidence in the paper. Examples include theoretical concept, simulation validated, laboratory validated, prototype demonstrated, pilot tested, or production-ready."
     )
+    section_count: int = Field(description="Total number of main sections/headings detected in the paper body structure.")
+    reference_count: int = Field(description="Total number of academic citations or bibliographic items listed in the references section.")
+    page_count: int = Field(default=0, description="Total page count of the target PDF asset.")

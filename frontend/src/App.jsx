@@ -50,7 +50,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f7f9] text-neutral-800 flex flex-col relative overflow-x-hidden font-sans antialiased select-none">
+    <div className="min-h-screen bg-[#f7f7f9] text-neutral-800 flex flex-col relative overflow-x-hidden font-sans antialiased">
       
       {/* Light Spatial Structural Canvas Grids */}
       <div className="absolute inset-0 -z-20 bg-[linear-gradient(to_right,#e5e5ea_1px,transparent_1px),linear-gradient(to_bottom,#e5e5ea_1px,transparent_1px)] bg-[size:5rem_5rem] opacity-30 pointer-events-none" />
@@ -59,17 +59,17 @@ function App() {
       
       <main className="flex-grow relative z-10 flex items-center">
         <div className="container mx-auto px-6 py-16 max-w-5xl w-full">
-          {analysisState.status === 'idle' && (
+            {analysisState.status === 'idle' && (
             <UploadSection 
-              onAnalysisStart={handleAnalysisStart}
-              onAnalysisComplete={handleAnalysisComplete}
-              onAnalysisError={handleAnalysisError}
+                onAnalysisStart={handleAnalysisStart}
+                onAnalysisComplete={handleAnalysisComplete}
+                onAnalysisError={handleAnalysisError}
             />
-          )}
+            )}
 
-          {analysisState.status === 'loading' && (
+            {analysisState.status === 'loading' && (
             <AnalysisProgress fileId={analysisState.fileId} />
-          )}
+            )}
 
           {analysisState.status === 'completed' && (
             <ResultsSection 

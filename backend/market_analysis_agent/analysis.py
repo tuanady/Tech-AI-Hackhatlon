@@ -14,7 +14,6 @@ tavily_client = TavilyClient(api_key=TAVILY_API_KEY)
 gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 
 def _execute_single_tavily_search(query):
-    """Helper to run clean, isolated searches via Tavily."""
     try:
         response = tavily_client.search(
             query=query,
@@ -28,7 +27,6 @@ def _execute_single_tavily_search(query):
         return []
 
 def perform_market_research(problem_statement, industry_context):
-    # 1. Dynamically generate clean sub-queries to feed the Tavily Engine
     sub_queries = [
         f"{industry_context} market size TAM SAM SOM growth cagr trends",
         f"{industry_context} top startup competitors market landscape",
@@ -43,7 +41,6 @@ def perform_market_research(problem_statement, industry_context):
         for future in concurrent.futures.as_completed(futures):
             all_web_results.extend(future.result())
 
-    # Build unique, clean context pieces
     seen_urls = set()
     unique_web_results = []
     raw_context_pieces = []
@@ -56,44 +53,48 @@ def perform_market_research(problem_statement, industry_context):
             
     raw_context_text = "\n".join(raw_context_pieces)
     
-    # 2. Fully Generalized Strategic System Prompt Mapping to your Layout
-    print("🧠 Gemini is mapping web data directly to flowchart architecture...")
+    print("🧠 Gemini is mapping web data directly to dashboard architecture cards...")
+    
+    # 🚀 DENSITY CRUNCH: Added aggressive formatting rules to the prompt
     system_prompt = f"""
-    You are an elite Venture Capital Strategist, Global Market Analyst, and Tech Commercialization Consultant. 
-    Analyze the provided real-time web data and your internal foundational knowledge to build a specialized strategic market analysis.
+    You are an elite Venture Capital Strategist and Deep-Tech Commercialization Consultant.
+    Analyze the provided real-time web data to build a specialized strategic market analysis card profile.
 
     Target Sector/Industry Context: {industry_context}
     Core Innovation/Problem Statement to Analyze: {problem_statement}
     
-    You MUST output a strict JSON object containing these exact keys to match the system flowchart dashboard requirements.
-    Ensure values are highly analytical, granular, and backed by numbers/metrics found in the text. Look out for regional frameworks, specific regulatory bodies, or regional market paradoxes.
+    CRITICAL CARD LAYOUT & DENSITY RULES:
+    1. Keep text brief, crisp, and readable. Avoid dense paragraph blobs.
+    2. Where applicable, use markdown formatting with **bolding** to highlight critical numbers, metrics, or frameworks.
+    3. Maximize scannability for venture capitalists looking for rapid insight delivery.
 
-    Output Key-by-Key Blueprint:
+    You MUST output a strict JSON object containing these exact keys:
     {{
-        "need_for_product_service": "The overarching macro-demand or driving need in the market for this technology.",
-        "the_need_being_solved": "The specific granular customer pain point or friction loop being eliminated.",
-        "target_customer": "Explicit customer segmentation, customer profile/persona, and primary industry vertical target.",
-        "market_size_and_growth": "Total Addressable Market (TAM) definitions, global valuations, and target geographic breakdowns with clear dollar figures.",
+        "need_for_product_service": "1-2 sentence maximum summary of the macro driving need. Bold the primary catalyst.",
+        "the_need_being_solved": "List 2 concise bullet points detailing specific target user pain points or friction loops.",
+        "target_customer": "Explicit customer segmentation/persona. Bold the primary industry vertical target.",
+        "market_size_and_growth": "List 2 bullet points outlining geographic breakdowns or valuation metrics with clear figures.",
         "top_competitors": [
-            "Competitor A Name (with brief strategic positioning)",
-            "Competitor B Name (with brief strategic positioning)",
-            "Competitor C Name (with brief strategic positioning)"
+            "Competitor Name A (Short Descriptor)",
+            "Competitor Name B (Short Descriptor)",
+            "Competitor Name C (Short Descriptor)"
         ],
         "Potential_VC_investors": [
-            "Investor A Name (with brief investment thesis fit)",
-            "Investor B Name (with brief investment thesis fit)",
-            "Investor C Name (with brief investment thesis fit)"
+            "Investor Node A (Fund Stage)",
+            "Investor Node B (Fund Stage)",
+            "Investor Node C (Fund Stage)"
         ],
-        "recent_funding_activities": "Recent notable VC venture funding rounds, active investors, macro capital trends, or industry investment scales in this sector.",
-        "licensing_and_regulations": "Specific fast-track statutory tracks, regulatory hurdles, evaluation policies, or critical validation/safety frameworks required (e.g., specific regional bodies, health directory listings, or manufacturing rules if applicable).",
-        "business_model_suggestion": "The absolute optimal monetization mechanism or recurring commercial pricing loop recommended to scale sustainably.",
-        "potential_partners": [
-            "Partner Category/Entity A (strategic value detail)",
-            "Partner Category/Entity B (strategic value detail)",
-            "Partner Category/Entity C (strategic value detail)"
+        "TAM": "The absolute primary Total Addressable Market figure (e.g., '**$1.3 Trillion** by 2029'). Bold the metric.",
+        "recent_funding_activities": "1-2 brief sentences max summarizing investment trends or sector activity levels.",
+        "licensing_and_regulations": "List 2 concise bullet points naming specific fast-track routes, statutory hurdles, or regional bodies (e.g., FDA, CE, ISO).",
+        "business_model_suggestion": "1 clear sentence specifying the optimal monetization loop or transactional framework.",
+        "potential_partner_organizations": [
+            "Partner Entity A (Strategic Angle)",
+            "Partner Entity B (Strategic Angle)",
+            "Partner Entity C (Strategic Angle)"
         ],
-        "growth_rates": "Specific compound annual growth rates (CAGR %) and momentum metrics for this specific market vertical over the next 5-10 years.",
-        "ip_check": "Critical intellectual property landscape insights, standard defensive patent strategies, freedom-to-operate checks, or commercial protection parameters for this domain."
+        "growth_rates": "The primary vertical Compound Annual Growth Rate metric (e.g., '**9.8% CAGR** (2024-2029)'). Bold the rate.",
+        "ip_check": "1 clear sentence mapping the intellectual property landscape or protective patent strategies."
     }}
     """
     
@@ -106,16 +107,3 @@ def perform_market_research(problem_statement, industry_context):
     )
     
     return json.loads(response.text), unique_web_results
-
-# --- GENERAL LOCAL DEMO TEST ---
-if __name__ == "__main__":
-    generic_problem = "Millions of blind people lose a piece of their independence and dignity every single day, forced to rely on strangers just to navigate the physical world. At Sehnsora, we are building a wearable AI ecosystem that restores their autonomy making moving through society as safe, private, and effortless for them as it is for everyone else."
-    generic_industry = "Healthcare and Assistive Technology"
-    
-    try:
-        market_data, web_sources = perform_market_research(generic_problem, generic_industry)
-        print("\n📊 FLOWCHART COMPLIANT VC STRATEGY ANALYSIS:")
-        print(json.dumps(market_data, indent=2))
-            
-    except Exception as e:
-        print(f"❌ Execution Block failed: {e}")
