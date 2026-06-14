@@ -1,18 +1,17 @@
 import os
 import uuid
 import json
+import time
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-# =====================================================================
-# 📚 CORE AGENT MODULE IMPORTS
-# =====================================================================
 from extractor_agent.paper_content_extractor import PaperExtractorAgent
 from problem_statement_agent.problem_statement_generator import ProblemStatementGenerator
 from market_analysis_agent.analysis import perform_market_research
 from market_analysis_agent.consultant import run_consultant_agent
 from cofounder_agent.paper_matcher import look_for_potential_cofounders
+from bottleneck_classifier_agent.agent import BottleneckClassifier
 
 app = Flask(__name__)
 CORS(app)
@@ -20,10 +19,6 @@ CORS(app)
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-
-# =====================================================================
-# ⚙️ CONCURRENT WORKER UNIT (Processes 1 Vector completely)
-# =====================================================================
 def _process_single_problem_concurrently(problem, upload_path, idx):
     """Executes market research and consultant scoring concurrently in its own thread."""
     try:
@@ -33,7 +28,7 @@ def _process_single_problem_concurrently(problem, upload_path, idx):
         
         print(f"🔥 [CONCURRENT WORKER] Processing Vector {idx+1}: {problem_title}", flush=True)
         
-        # 1. Run Gemini 12-key research vector engine
+        # Run Gemini 12-key research vector engine
         market_data, raw_sources = perform_market_research(problem_text, industry)
         if isinstance(market_data, str):
             try: market_data = json.loads(market_data)
@@ -45,8 +40,20 @@ def _process_single_problem_concurrently(problem, upload_path, idx):
         with open(os.path.join(upload_path, f"market_data_raw_sources_{problem_title}.json"), "w", encoding="utf-8") as f:
             json.dump(raw_sources, f, indent=2, ensure_ascii=False)
 
-        # 2. Run Due Diligence consultant evaluator agent
-        final_verdict = run_consultant_agent(market_data, problem_text, industry)
+        bottleneck_classifier = BottleneckClassifier()
+        print(f"🧠 Running Pioneer Bottleneck Classifier for {problem_title}", flush=True)
+        classifier_result = bottleneck_classifier.classify(market_data)
+        bottleneck = (classifier_result.get("data", {}).get("commercialization_bottleneck", {}))
+
+        classifier_result = {
+            "bottleneck": bottleneck.get("label"),
+            "confidence": bottleneck.get("confidence")
+        }
+        with open(os.path.join(upload_path, f"bottleneck_classifier_result_{problem_title}.json"), "w", encoding="utf-8") as f:
+            json.dump(classifier_result, f, indent=2, ensure_ascii=False)
+
+        # Run Due Diligence consultant evaluator agent
+        final_verdict = run_consultant_agent(market_data, problem_text, industry, classifier_result)
         if isinstance(final_verdict, str):
             try: final_verdict = json.loads(final_verdict)
             except: final_verdict = {}
@@ -73,6 +80,7 @@ def _process_single_problem_concurrently(problem, upload_path, idx):
             "potential_partner_organizations": market_data.get("potential_partner_organizations", []),
             "growth_rates": market_data.get("growth_rates", "N/A"),
             "ip_check": market_data.get("ip_check", "N/A"),
+            "bottleneck_analysis": classifier_result,
             "verdict": {
                 "recommendation": final_verdict.get("investment_verdict", "PURSUE"),
                 "summary": final_verdict.get("executive_justification", ""),
@@ -85,9 +93,6 @@ def _process_single_problem_concurrently(problem, upload_path, idx):
         return None
 
 
-# =====================================================================
-# 🎛️ PIPELINE ORCHESTRATION ENGINE
-# =====================================================================
 def run_workflow(paper_path, upload_path, original_filename, domain):
     extractor = PaperExtractorAgent()
     generator = ProblemStatementGenerator()
@@ -148,9 +153,22 @@ def run_workflow(paper_path, upload_path, original_filename, domain):
         return compiled_payload
 
 
-# =====================================================================
-# 📡 STANDARD HTTP ENDPOINT
-# =====================================================================
+def _log_timing(upload_path: str, name: str, duration: float, extra: dict | None = None):
+    """Append a JSON line with timing info to execution_stats.log in the upload folder."""
+    try:
+        log_path = os.path.join(upload_path, "execution_stats.log")
+        entry = {
+            "name": name,
+            "durations": round(duration, 4),
+            "timestamp": time.time(),
+        }
+        if extra:
+            entry.update(extra)
+        with open(log_path, "a", encoding="utf-8") as lf:
+            lf.write(json.dumps(entry) + "\n")
+    except Exception as e:
+        print(f"⚠️ Failed to write timing log: {e}")
+
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok"})
@@ -180,7 +198,6 @@ def analyze_paper():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

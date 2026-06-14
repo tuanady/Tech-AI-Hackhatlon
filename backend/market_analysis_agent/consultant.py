@@ -25,7 +25,7 @@ class ConsultantDecisionSchema(BaseModel):
     )
 
 
-def run_consultant_agent(market_research_payload: dict, original_problem: str, industry_context: str):
+def run_consultant_agent(market_research_payload: dict, original_problem: str, industry_context: str, bottleneck_result: dict):
     """
     Accepts raw market research JSON from ANY source and evaluates its startup potential.
     """
@@ -51,6 +51,9 @@ def run_consultant_agent(market_research_payload: dict, original_problem: str, i
     input_payload = f"""
     {system_prompt}
     
+    Commercialization Bottleneck Analysis (from fine-tuned Pioneer model):
+    {json.dumps(bottleneck_result, indent=2)}
+
     --- RAW INPUT DATASET ---
     {json.dumps(market_research_payload, indent=2)}
     """
