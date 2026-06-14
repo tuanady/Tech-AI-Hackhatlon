@@ -50,16 +50,15 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#070708] text-[#e4e4e7] flex flex-col relative overflow-x-hidden font-mono antialiased selection:bg-cyan-500/20 selection:text-cyan-400">
+    <div className="min-h-screen bg-[#f7f7f9] text-neutral-800 flex flex-col relative overflow-x-hidden font-sans antialiased select-none">
       
-      {/* Dynamic Tactical Background Elements */}
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#121316] via-[#070708] to-[#020203]" />
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#1f2025_1px,transparent_1px),linear-gradient(to_bottom,#1f2025_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-[0.03]" />
+      {/* Light Spatial Structural Canvas Grids */}
+      <div className="absolute inset-0 -z-20 bg-[linear-gradient(to_right,#e5e5ea_1px,transparent_1px),linear-gradient(to_bottom,#e5e5ea_1px,transparent_1px)] bg-[size:5rem_5rem] opacity-30 pointer-events-none" />
 
       <Header />
       
-      <main className="flex-grow relative z-10">
-        <div className="container mx-auto px-6 py-16">
+      <main className="flex-grow relative z-10 flex items-center">
+        <div className="container mx-auto px-6 py-16 max-w-5xl w-full">
           {analysisState.status === 'idle' && (
             <UploadSection 
               onAnalysisStart={handleAnalysisStart}
@@ -80,21 +79,18 @@ function App() {
           )}
 
           {analysisState.status === 'error' && (
-            <div className="max-w-2xl mx-auto">
-              <div className="bg-[#0b0c0e] border border-red-500/30 p-8 rounded-xl shadow-2xl relative overflow-hidden group">
-                <div className="absolute top-0 left-0 w-1 h-full bg-red-500" />
-                <div className="flex items-start gap-4">
-                  <div className="text-xl text-red-500 font-bold font-sans">(!)_</div>
-                  <div className="flex-grow">
-                    <h3 className="text-sm font-bold tracking-widest uppercase text-red-400">CRITICAL_SYSTEM_FAULT</h3>
-                    <p className="text-xs text-gray-400 mt-2 leading-relaxed bg-red-950/20 border border-red-900/30 p-3 rounded font-mono break-all">{analysisState.error}</p>
-                  </div>
+            <div className="max-w-xl mx-auto">
+              <div className="bg-white border border-neutral-200/80 p-8 rounded-[24px] shadow-xl text-center">
+                <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-200 flex items-center justify-center text-red-500 mx-auto mb-4 font-semibold">
+                  !
                 </div>
+                <h3 className="text-lg font-medium text-neutral-900 tracking-tight">Compilation Fault</h3>
+                <p className="text-sm text-neutral-500 mt-2 font-light leading-relaxed">{analysisState.error}</p>
                 <button 
                   onClick={handleReset}
-                  className="mt-8 w-full py-3.5 rounded border border-red-500/40 hover:bg-red-500/10 text-red-400 text-xs tracking-widest uppercase font-bold transition-all duration-300"
+                  className="mt-8 px-6 py-3 rounded-full text-xs font-medium tracking-wider uppercase bg-neutral-950 hover:bg-neutral-800 text-white transition-all duration-300"
                 >
-                  Reinitialize Pipeline
+                  Return to Workspace
                 </button>
               </div>
             </div>

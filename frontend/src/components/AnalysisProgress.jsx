@@ -3,20 +3,20 @@ import { Cpu, Search, Layers, RefreshCw, Activity } from 'lucide-react'
 
 export default function AnalysisProgress({ fileId }) {
   const [currentMessage, setCurrentMessage] = useState(0)
-  const [systemDots, setSystemDots] = useState('>>>')
+  const [systemDots, setSystemDots] = useState('...')
 
   const ambientLogs = [
-    { text: "MOUNTING CORE ENGINE EXTRACTOR INTERFACE", icon: <Cpu className="w-4 h-4 text-cyan-400" /> },
-    { text: "PARSING RAW CONTENT BLOCKS & METHODS SCHEMAS", icon: <Layers className="w-4 h-4 text-gray-400" /> },
-    { text: "CROSS-COMPILING MULTI-AGENT PROBLEM TARGET ARRAYS", icon: <RefreshCw className="w-4 h-4 text-amber-500" /> },
-    { text: "QUERYING TAVILY ENGINES FOR GLOBAL MARKET TELEMETRY", icon: <Search className="w-4 h-4 text-emerald-400" /> },
-    { text: "EXECUTING AI-CONSULTANT DUE-DILIGENCE DEPLOYMENTS", icon: <Cpu className="w-4 h-4 text-cyan-400 animate-pulse" /> }
+    { text: "Mounting core matrix data extractor...", icon: <Cpu className="w-4 h-4 text-indigo-500" /> },
+    { text: "Parsing abstract content blocks & system schemas...", icon: <Layers className="w-4 h-4 text-neutral-500" /> },
+    { text: "Cross-compiling target problem statements...", icon: <RefreshCw className="w-4 h-4 text-purple-500" /> },
+    { text: "Querying infrastructure indexes for market telemetry...", icon: <Search className="w-4 h-4 text-cyan-500" /> },
+    { text: "Deploying autonomous intelligence consultants...", icon: <Activity className="w-4 h-4 text-emerald-500 animate-pulse" /> }
   ]
 
   useEffect(() => {
     const dotInterval = setInterval(() => {
-      setSystemDots(prev => (prev.length >= 6 ? '>>>' : prev + '>'))
-    }, 400)
+      setSystemDots(prev => (prev.length >= 3 ? '.' : prev + '.'))
+    }, 500)
     return () => clearInterval(dotInterval)
   }, [])
 
@@ -28,58 +28,51 @@ export default function AnalysisProgress({ fileId }) {
   }, [ambientLogs.length])
 
   return (
-    <div className="max-w-xl mx-auto min-h-[400px] flex flex-col items-center justify-center text-center px-6">
+    <div className="max-w-xl mx-auto min-h-[380px] flex flex-col items-center justify-center text-center px-6 animate-fadeIn relative">
       
       <style>{`
-        @keyframes radarPulse {
-          0% { transform: scale(0.95); opacity: 0.1; }
-          50% { opacity: 0.3; }
-          100% { transform: scale(1.4); opacity: 0; }
+        @keyframes subtleScale {
+          0%, 100% { transform: scale(1); opacity: 0.5; }
+          50% { transform: scale(1.12); opacity: 0.8; }
         }
-        @keyframes tacticalScan {
+        @keyframes dynamicLinear {
           0% { left: -100%; }
-          100% { left: 200%; }
+          100% { left: 100%; }
         }
       `}</style>
       
-      {/* Tactical Center-Ring Radar Loop */}
-      <div className="relative mb-12">
-        <div className="absolute inset-0 rounded-full border border-cyan-500" style={{ animation: 'radarPulse 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite' }} />
-        <div className="absolute inset-0 rounded-full border border-cyan-400/40" style={{ animation: 'radarPulse 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite', animationDelay: '0.6s' }} />
-        <div className="relative w-16 h-16 rounded border border-cyan-500/30 bg-[#0d0e11] flex items-center justify-center shadow-2xl">
-          <Activity className="w-6 h-6 text-cyan-400 animate-pulse" />
+      {/* Editorial Minimal Loading Ring Grid */}
+      <div className="relative mb-10">
+        <div className="absolute -inset-4 rounded-full border border-neutral-200 bg-white/40 shadow-sm" style={{ animation: 'subtleScale 3s ease-in-out infinite' }} />
+        <div className="relative w-14 h-14 rounded-full border border-neutral-200/80 bg-white flex items-center justify-center shadow-md">
+          <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-500 animate-pulse" />
         </div>
       </div>
 
-      {/* Dynamic Console Feed */}
-      <div className="w-full space-y-4">
-        <div className="text-xs font-bold tracking-[0.2em] uppercase text-white flex items-center justify-center gap-2">
-          <span>PROCESSING_PIPELINE_FLOW</span>
-          <span className="text-cyan-400 font-mono">{systemDots}</span>
+      {/* Dynamic Progression Messaging Content */}
+      <div className="w-full space-y-4 relative z-10">
+        <div className="text-sm font-medium tracking-wide text-neutral-800">
+          Synthesizing Venture Intelligence{systemDots}
         </div>
 
-        {/* Console Print Out Box */}
-        <div className="bg-[#0d0e11] border border-[#1c1d21] rounded-lg px-4 py-3.5 max-w-md mx-auto flex items-center gap-3 shadow-inner">
-          <div className="flex-shrink-0 animate-spin [animation-duration:6s]">
+        {/* Minimal Alabaster Information Card Pill */}
+        <div className="bg-white/70 border border-white shadow-[0_12px_32px_rgba(0,0,0,0.03)] backdrop-blur-md rounded-2xl px-6 py-4 max-w-sm mx-auto flex items-center gap-4 transition-all duration-300">
+          <div className="flex-shrink-0">
             {ambientLogs[currentMessage].icon}
           </div>
-          <p className="text-[10px] font-mono tracking-widest text-gray-300 text-left uppercase truncate select-none">
+          <p className="text-xs text-neutral-600 font-light text-left tracking-wide select-none leading-relaxed">
             {ambientLogs[currentMessage].text}
           </p>
         </div>
       </div>
 
-      {/* Line Indicator Element */}
-      <div className="w-40 h-[1px] bg-gray-800 rounded-full mt-10 overflow-hidden relative">
+      {/* Sleek Line Progress Bar Indicator */}
+      <div className="w-36 h-[3px] bg-neutral-200/60 rounded-full mt-10 overflow-hidden relative">
         <div 
-          className="absolute top-0 bottom-0 w-12 bg-cyan-400" 
-          style={{ animation: 'tacticalScan 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite' }} 
+          className="absolute top-0 bottom-0 w-16 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" 
+          style={{ animation: 'dynamicLinear 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite' }} 
         />
       </div>
-
-      <p className="text-[9px] tracking-widest text-gray-600 font-mono uppercase mt-4">
-        LOG_STREAM_CONNECTED // THREAD_01
-      </p>
     </div>
   )
 }

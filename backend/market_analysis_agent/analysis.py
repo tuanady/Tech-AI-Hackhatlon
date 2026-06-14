@@ -79,6 +79,11 @@ def perform_market_research(problem_statement, industry_context):
             "Competitor B Name (with brief strategic positioning)",
             "Competitor C Name (with brief strategic positioning)"
         ],
+        "Potential_VC_investors": [
+            "Investor A Name (with brief investment thesis fit)",
+            "Investor B Name (with brief investment thesis fit)",
+            "Investor C Name (with brief investment thesis fit)"
+        ],
         "recent_funding_activities": "Recent notable VC venture funding rounds, active investors, macro capital trends, or industry investment scales in this sector.",
         "licensing_and_regulations": "Specific fast-track statutory tracks, regulatory hurdles, evaluation policies, or critical validation/safety frameworks required (e.g., specific regional bodies, health directory listings, or manufacturing rules if applicable).",
         "business_model_suggestion": "The absolute optimal monetization mechanism or recurring commercial pricing loop recommended to scale sustainably.",
