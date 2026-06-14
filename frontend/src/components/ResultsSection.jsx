@@ -136,6 +136,34 @@ END OF TELEMETRY DATA SHEET // STARTARCH COMMERCIALIZATION ENGINE
     setTimeout(() => setIsDownloading(false), 800)
   }
 
+  const handleGeneratePitchDeck = async () => {
+  try {
+    const response = await fetch(
+      "http://localhost:5000/generate-pitchdeck"
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to generate pitch deck");
+    }
+
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "AI_Pitch_Deck.pptx";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Pitch deck generation failed:", error);
+  }
+  };
+
   if (problemsList.length === 0) {
     return (
       <div className="max-w-4xl mx-auto text-center py-20 px-4 animate-fadeIn">
@@ -516,6 +544,58 @@ END OF TELEMETRY DATA SHEET // STARTARCH COMMERCIALIZATION ENGINE
                 <span className="text-sm font-semibold text-neutral-900 mt-1 block font-mono">15% SAFE</span>
                 </div>
             </div>
+            </div>
+
+            {/* 🆕 Sidebar Card: AI Pitch Deck Builder */}
+            {/* 🆕 Sidebar Card: AI Pitch Deck Builder */}
+            <div className="bg-black border border-neutral-950 rounded-3xl p-5 shadow-xl space-y-4">
+              <div className="flex items-center gap-2 text-white pb-2 border-b border-neutral-800">
+                <Sparkles className="w-4 h-4 text-violet-400" />
+                <h4 className="text-xs font-bold tracking-widest uppercase font-mono">
+                  AI Pitch Deck Builder
+                </h4>
+              </div>
+
+              <p className="text-[11px] text-neutral-400 font-light leading-relaxed">
+                Transform research papers, patents, and technical breakthroughs into
+                investor-ready startup narratives and pitch decks.
+              </p>
+
+              <div className="space-y-2">
+                <div className="flex justify-between items-center bg-neutral-900 p-2.5 rounded-xl border border-neutral-800">
+                  <span className="text-xs font-medium text-neutral-100">
+                    Auto-Generate Investor Deck
+                  </span>
+                  <span className="text-[10px] font-mono text-violet-400 uppercase font-bold bg-violet-950/50 px-2 py-0.5 rounded">
+                    AI CORE
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center bg-neutral-900 p-2.5 rounded-xl border border-neutral-800">
+                  <span className="text-xs font-medium text-neutral-100">
+                    Research → Startup Mapping
+                  </span>
+                  <span className="text-[10px] font-mono text-indigo-400 uppercase font-bold bg-indigo-950/50 px-2 py-0.5 rounded">
+                    VENTURE
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center bg-neutral-900 p-2.5 rounded-xl border border-neutral-800">
+                  <span className="text-xs font-medium text-neutral-100">
+                    Market & TAM Analysis
+                  </span>
+                  <span className="text-[10px] font-mono text-emerald-400 uppercase font-bold bg-emerald-950/50 px-2 py-0.5 rounded">
+                    INSIGHTS
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleGeneratePitchDeck}
+                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-xs font-semibold hover:opacity-90 transition"
+              >
+                Generate Pitch Deck →
+              </button>
             </div>
 
           </div>
