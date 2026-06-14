@@ -2,9 +2,11 @@ import os
 import uuid
 import json
 import time
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
+
 
 from extractor_agent.paper_content_extractor import PaperExtractorAgent
 from problem_statement_agent.problem_statement_generator import ProblemStatementGenerator
@@ -198,6 +200,30 @@ def analyze_paper():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route("/generate-pitchdeck", methods=["GET"])
+def generate_pitchdeck():
+    try:
+        ppt_path = Path("../mock.pptx")
+
+        if not ppt_path.exists():
+            return jsonify({
+                "success": False,
+                "message": "Pitch deck not found"
+            }), 404
+
+        return send_file(
+            ppt_path,
+            as_attachment=True,
+            download_name="Empowering my research.pptx",
+            mimetype="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        )
+
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        }), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
