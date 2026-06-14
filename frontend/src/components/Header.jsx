@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Header() {
   return (
@@ -7,8 +8,18 @@ export default function Header() {
         
         {/* Clean, High-Contrast Minimalist Brand Mark on Top Left */}
         <div className="text-sm font-bold tracking-[0.35em] text-neutral-900 select-none font-mono">
-          STARTARCH
+          <Link to="/">STARTARCH</Link>
         </div>
+
+        <nav>
+          <ul className="flex items-center gap-8 text-sm">
+            <li><Link to="/about" className="hover:text-neutral-600">About Us</Link></li>
+            <li><Link to="/how-it-works" className="hover:text-neutral-600">How It Works</Link></li>
+            <li><Link to="/features" className="hover:text-neutral-600">Features</Link></li>
+            <li><Link to="/technologies-used" className="hover:text-neutral-600">Technologies</Link></li>
+            <li><Link to="/contact" className="hover:text-neutral-600">Contact Us</Link></li>
+          </ul>
+        </nav>
 
       </div>
     </header>

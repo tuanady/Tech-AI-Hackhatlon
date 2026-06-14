@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
@@ -6,24 +7,23 @@ export default function Footer() {
       <div className="container mx-auto px-6 py-10 max-w-5xl">
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 mb-10 text-xs">
           <div>
-            <h4 className="font-bold uppercase tracking-wider text-neutral-400 mb-3.5">Platform Streams</h4>
+            <h4 className="font-bold uppercase tracking-wider text-neutral-400 mb-3.5">Explore</h4>
             <ul className="space-y-2 text-neutral-500 font-light">
-              <li><a href="#" className="hover:text-indigo-600 transition-colors">Telemetry Mapping</a></li>
-              <li><a href="#" className="hover:text-indigo-600 transition-colors">Ecosystem Nodes</a></li>
+              <li><Link to="/about" className="hover:text-indigo-600 transition-colors">About Us</Link></li>
+              <li><Link to="/how-it-works" className="hover:text-indigo-600 transition-colors">How It Works</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-bold uppercase tracking-wider text-neutral-400 mb-3.5">Ecosystem Core</h4>
+            <h4 className="font-bold uppercase tracking-wider text-neutral-400 mb-3.5">Learn More</h4>
             <ul className="space-y-2 text-neutral-500 font-light">
-              <li><a href="#" className="hover:text-indigo-600 transition-colors">About Startarch</a></li>
-              <li><a href="#" className="hover:text-indigo-600 transition-colors">Connection Vector</a></li>
+              <li><Link to="/features" className="hover:text-indigo-600 transition-colors">Features</Link></li>
+              <li><Link to="/technologies-used" className="hover:text-indigo-600 transition-colors">Technologies</Link></li>
             </ul>
           </div>
           <div className="col-span-2 sm:col-span-1">
-            <h4 className="font-bold uppercase tracking-wider text-neutral-400 mb-3.5">Compliance Matrix</h4>
+            <h4 className="font-bold uppercase tracking-wider text-neutral-400 mb-3.5">Connect</h4>
             <ul className="space-y-2 text-neutral-500 font-light">
-              <li><a href="#" className="hover:text-indigo-600 transition-colors">Data Ingestion Terms</a></li>
-              <li><a href="#" className="hover:text-indigo-600 transition-colors">Encryption Protocols</a></li>
+              <li><Link to="/contact" className="hover:text-indigo-600 transition-colors">Contact Us</Link></li>
             </ul>
           </div>
         </div>
