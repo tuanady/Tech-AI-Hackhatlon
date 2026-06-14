@@ -1,0 +1,49 @@
+{
+  "id": "53c9354e-459b-4063-8484-4134def423e4",
+  "user_id": "aa6a6888-c0ef-431a-b441-109f2002d690",
+  "project_id": "40d45b8f-488f-40c9-94c0-a8a4b05c4dca",
+  "model_name": "commercialization-bottleneck-v1",
+  "datasets": [
+    {
+      "name": "commercialization-bottleneck-classifier",
+      "version": "1"
+    }
+  ],
+  "base_model": "fastino/gliner2-base-v1",
+  "validation_data_percentage": 0.2,
+  "nr_epochs": 5,
+  "learning_rate": 5e-05,
+  "batch_size": 4,
+  "trained_model_path": null,
+  "job_reference": "53c9354e-459b-4063-8484-4134def423e4",
+  "instance_type": "ml.g4dn.xlarge",
+  "status": "requested",
+  "normalized_status": "requested",
+  "is_terminal_status": false,
+  "error_message": null,
+  "created_at": "2026-06-14T06:38:04.367332+00:00",
+  "updated_at": "2026-06-14T06:38:04.367332+00:00",
+  "started_at": null,
+  "completed_at": null,
+  "model_auto_selected": false,
+  "model_selection_reason": null,
+  "task_type": "classification",
+  "labels": [
+    "REGULATORY_APPROVAL",
+    "CUSTOMER_ADOPTION",
+    "MANUFACTURING_SCALE",
+    "CAPITAL_REQUIREMENTS",
+    "IP_DEFENSIBILITY",
+    "GO_TO_MARKET",
+    "TECHNICAL_MATURITY"
+  ],
+  "example": null,
+  "metrics": null,
+  "version_number": "1",
+  "root_job_id": null,
+  "provider_deployments": null,
+  "provider_name": "modal",
+  "progress_percent": null,
+  "current_epoch": null,
+  "deployment_status": null
+}

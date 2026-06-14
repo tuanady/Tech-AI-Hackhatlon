@@ -1,0 +1,8 @@
+{
+  "job_id": "3ebb2dc0-e0a4-4377-9971-db5984912a03",
+  "status": "queued",
+  "dataset_name": "commercialization-bottleneck-classifier",
+  "task_type": "classification",
+  "is_seed": false,
+  "message": "Generation job started"
+}
