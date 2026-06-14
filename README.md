@@ -4,6 +4,7 @@
 
 STARTARCH is an AI-powered commercialization platform that helps bridge the gap between academic research and real-world innovation. By combining multi-agent workflows, market intelligence, and fine-tuned commercialization models, STARTARCH converts research papers into actionable startup opportunities, investment insights, and commercialization roadmaps.
 
+![STARTARCH Intro](assets/intro.png)
 ---
 
 ## The Problem
@@ -40,6 +41,8 @@ Upload a research paper and receive:
 * Venture-style investment evaluations
 * Potential co-founder recommendations
 
+![Workflow Result](assets/main.png)
+![Market Research](assets/2.png)
 ---
 
 ## Key Features
