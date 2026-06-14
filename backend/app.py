@@ -7,13 +7,13 @@ from flask_cors import CORS
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-
+from pitch_deck.deck import generate_pitch_deck_file
 from extractor_agent.paper_content_extractor import PaperExtractorAgent
 from problem_statement_agent.problem_statement_generator import ProblemStatementGenerator
 from market_analysis_agent.analysis import perform_market_research
 from market_analysis_agent.consultant import run_consultant_agent
 from cofounder_agent.paper_matcher import look_for_potential_cofounders
-from bottleneck_classifier_agent.agent import BottleneckClassifier
+# from bottleneck_classifier_agent.agent import BottleneckClassifier
 
 app = Flask(__name__)
 CORS(app)
@@ -42,14 +42,14 @@ def _process_single_problem_concurrently(problem, upload_path, idx):
         with open(os.path.join(upload_path, f"market_data_raw_sources_{problem_title}.json"), "w", encoding="utf-8") as f:
             json.dump(raw_sources, f, indent=2, ensure_ascii=False)
 
-        bottleneck_classifier = BottleneckClassifier()
-        print(f"🧠 Running Pioneer Bottleneck Classifier for {problem_title}", flush=True)
-        classifier_result = bottleneck_classifier.classify(market_data)
-        bottleneck = (classifier_result.get("data", {}).get("commercialization_bottleneck", {}))
+        # bottleneck_classifier = BottleneckClassifier()
+        # print(f"🧠 Running Pioneer Bottleneck Classifier for {problem_title}", flush=True)
+        # classifier_result = bottleneck_classifier.classify(market_data)
+        # bottleneck = (classifier_result.get("data", {}).get("commercialization_bottleneck", {}))
 
         classifier_result = {
-            "bottleneck": bottleneck.get("label"),
-            "confidence": bottleneck.get("confidence")
+            # "bottleneck": bottleneck.get("label"),
+            # "confidence": bottleneck.get("confidence")
         }
         with open(os.path.join(upload_path, f"bottleneck_classifier_result_{problem_title}.json"), "w", encoding="utf-8") as f:
             json.dump(classifier_result, f, indent=2, ensure_ascii=False)
@@ -204,20 +204,23 @@ def analyze_paper():
 @app.route("/generate-pitchdeck", methods=["GET"])
 def generate_pitchdeck():
     try:
-        ppt_path = Path("../mock.pptx")
+        global LATEST_PAYLOAD
 
-        if not ppt_path.exists():
+        if not LATEST_PAYLOAD:
             return jsonify({
                 "success": False,
-                "message": "Pitch deck not found"
-            }), 404
+                "message": "No analysis available. Run /analyze-paper first."
+            }), 400
 
-        return send_file(
-            ppt_path,
-            as_attachment=True,
-            download_name="Empowering my research.pptx",
-            mimetype="application/vnd.openxmlformats-officedocument.presentationml.presentation"
-        )
+        output_path = generate_pitch_deck_file(LATEST_PAYLOAD)
+        time.sleep(0.5)
+        if not os.path.exists(output_path) or os.path.getsize(output_path) < 1000:
+            return send_file(
+                output_path,
+                as_attachment=True,
+                download_name="AI_Pitch_Deck.pptx",
+                mimetype="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            )
 
     except Exception as e:
         return jsonify({
