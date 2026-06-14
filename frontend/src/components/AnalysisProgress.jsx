@@ -1,68 +1,63 @@
-import React, { useState, useEffect } from 'react'
-import { Sparkles, Cpu, Layers, RefreshCw, Search, Activity } from 'lucide-react'
+import React, { useState, useEffect } from 'react';
+import { CheckCircle, Loader, FileText, Users, BrainCircuit, Briefcase, Award, GitCommit, Database, Search } from 'lucide-react';
+
+const analysisSteps = [
+  { text: "Extracting core content from research paper...", duration: 8000, icon: <FileText className="w-5 h-5 text-blue-500" /> },
+  { text: "Parsing scientific schemas and data tables...", duration: 7000, icon: <Database className="w-5 h-5 text-blue-500" /> },
+  { text: "Initializing Smart Co-Founder Matcher...", duration: 6000, icon: <Users className="w-5 h-5 text-purple-500" /> },
+  { text: "Executing academic query for potential co-founders...", duration: 9000, icon: <Search className="w-5 h-5 text-purple-500" /> },
+  { text: "Generating core problem statement blueprints...", duration: 10000, icon: <BrainCircuit className="w-5 h-5 text-indigo-500" /> },
+  { text: "Spawning concurrent worker threads...", duration: 6000, icon: <GitCommit className="w-5 h-5 text-gray-500" /> },
+  { text: "Querying market data sources for each problem vector...", duration: 12000, icon: <Briefcase className="w-5 h-5 text-orange-500" /> },
+  { text: "Gemini is mapping web data to dashboard architecture...", duration: 10000, icon: <Loader className="w-5 h-5 text-orange-500 animate-spin" /> },
+  { text: "Consulting Agent is running venture due diligence...", duration: 10000, icon: <Award className="w-5 h-5 text-teal-500" /> },
+  { text: "Resolving and stacking analysis vectors...", duration: 6000, icon: <CheckCircle className="w-5 h-5 text-green-500" /> },
+  { text: "Compiling final blueprint matrix...", duration: 6000, icon: <CheckCircle className="w-5 h-5 text-green-500" /> }
+];
 
 export default function AnalysisProgress({ fileId }) {
-  const [currentMessage, setCurrentMessage] = useState(0)
-  const [systemDots, setSystemDots] = useState('...')
-
-  const ambientLogs = [
-    { text: "MOUNTING CORE DATA EXTRACTOR AGENT INTERFACE...", icon: <Cpu className="w-4 h-4 text-indigo-500" /> },
-    { text: "PARSING RAW CONTENT BLOCKS & SCIENTIFIC SCHEMAS...", icon: <Layers className="w-4 h-4 text-neutral-500" /> },
-    { text: "DISPATCHING CO-FOUNDER SPIDER TO GOOGLE SCHOLAR...", icon: <RefreshCw className="w-4 h-4 text-purple-500" /> },
-    { text: "QUERYING INFRASTRUCTURE INDEXES FOR MARKET TELEMETRY...", icon: <Search className="w-4 h-4 text-cyan-500" /> },
-    { text: "DEPLOYING AUTONOMOUS STARTARCH STRATEGY CONSULTANTS...", icon: <Activity className="w-4 h-4 text-emerald-500 animate-pulse" /> }
-  ]
+  const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    const dotInterval = setInterval(() => {
-      setSystemDots(prev => (prev.length >= 3 ? '.' : prev + '.'))
-    }, 500)
-    return () => clearInterval(dotInterval)
-  }, [])
+    if (currentStep < analysisSteps.length - 1) {
+      const timer = setTimeout(() => {
+        setCurrentStep(currentStep + 1);
+      }, analysisSteps[currentStep].duration);
+      return () => clearTimeout(timer);
+    }
+  }, [currentStep]);
 
-  useEffect(() => {
-    const msgInterval = setInterval(() => {
-      setCurrentMessage(prev => (prev < ambientLogs.length - 1 ? prev + 1 : prev))
-    }, 4500)
-    return () => clearInterval(msgInterval)
-  }, [ambientLogs.length])
+  const step = analysisSteps[currentStep];
 
   return (
-    <div className="max-w-xl mx-auto min-h-[380px] flex flex-col items-center justify-center text-center px-6 animate-fadeIn relative">
-      <style>{`
-        @keyframes subtleScale {
-          0%, 100% { transform: scale(1); opacity: 0.5; }
-          50% { transform: scale(1.12); opacity: 0.8; }
-        }
-        @keyframes dynamicLinear {
-          0% { left: -100%; }
-          100% { left: 100%; }
-        }
-      `}</style>
-      
-      <div className="relative mb-10">
-        <div className="absolute -inset-4 rounded-full border border-neutral-200 bg-white/40 shadow-sm" style={{ animation: 'subtleScale 3s ease-in-out infinite' }} />
-        <div className="relative w-14 h-14 rounded-full border border-neutral-200/80 bg-white flex items-center justify-center shadow-md">
-          <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-500 animate-pulse" />
-        </div>
-      </div>
-
-      <div className="w-full space-y-4 relative z-10">
-        <div className="text-sm font-medium tracking-wide text-neutral-800">
-          Synthesizing Venture Intelligence{systemDots}
+    <div className="max-w-2xl mx-auto min-h-[420px] flex flex-col items-center justify-center text-center px-4">
+      <div className="w-full bg-white/80 backdrop-blur-lg border border-gray-200/80 rounded-3xl shadow-lg p-8 flex flex-col items-center">
+        <h2 className="text-2xl font-bold text-gray-800 mb-2 tracking-tight">Analyzing Your Document</h2>
+        <p className="text-gray-500 mb-8">Our AI agents are hard at work. Here's what's happening:</p>
+        
+        <div className="h-32 flex flex-col justify-center items-center w-full">
+          <div 
+            key={currentStep} 
+            className="flex flex-col items-center animate-fadeIn w-full"
+          >
+            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+              {step.icon}
+            </div>
+            <span className="font-medium text-gray-700 text-lg text-center px-4">
+              {step.text}
+            </span>
+          </div>
         </div>
 
-        <div className="bg-white/70 border border-white shadow-[0_12px_32px_rgba(0,0,0,0.03)] backdrop-blur-md rounded-2xl px-6 py-4 max-w-sm mx-auto flex items-center gap-4 transition-all duration-300">
-          <div className="flex-shrink-0">{ambientLogs[currentMessage].icon}</div>
-          <p className="text-xs text-neutral-600 font-light text-left tracking-wide select-none leading-relaxed">
-            {ambientLogs[currentMessage].text}
-          </p>
+        {/* Overall Progress bar */}
+        <div className="w-full bg-gray-200 rounded-full h-2.5 mt-8">
+          <div 
+            className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2.5 rounded-full transition-all duration-500 ease-in-out" 
+            style={{ width: `${((currentStep + 1) / analysisSteps.length) * 100}%` }}
+          ></div>
         </div>
-      </div>
-
-      <div className="w-36 h-[3px] bg-neutral-200/60 rounded-full mt-10 overflow-hidden relative">
-        <div className="absolute top-0 bottom-0 w-16 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" style={{ animation: 'dynamicLinear 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite' }} />
+        <p className="text-sm text-gray-500 mt-2">{`Step ${currentStep + 1} of ${analysisSteps.length}`}</p>
       </div>
     </div>
-  )
+  );
 }
